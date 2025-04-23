@@ -1,0 +1,137 @@
+
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Montserrat', sans-serif;
+scroll-behavior: smooth;
+}
+.video-card:hover .play-button {
+opacity: 1;
+transform: translate(-50%, -50%) scale(1.1);
+}
+.play-button {
+opacity: 0.8;
+transition: all 0.3s ease;
+}
+.featured-project {
+transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.featured-project:hover {
+transform: translateY(-10px);
+box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.1), 0 10px 10px -5px rgba(220, 38, 38, 0.04);
+}
+.neon-border {
+box-shadow: 0 0 10px rgba(220, 38, 38, 0.5), 0 0 20px rgba(220, 38, 38, 0.3);
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 30px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .4s;
+border-radius: 30px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 22px;
+width: 22px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider {
+background-color: #d92828;
+}
+input:checked + .slider:before {
+transform: translateX(30px);
+}
+.custom-radio {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+.custom-radio-input {
+appearance: none;
+width: 20px;
+height: 20px;
+border: 2px solid #d1d5db;
+border-radius: 50%;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+}
+.custom-radio-input:checked {
+border-color: #dc2626;
+}
+.custom-radio-input:checked::after {
+content: "";
+position: absolute;
+top: 3px;
+left: 3px;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background-color: #dc2626;
+}
+.custom-checkbox {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+.custom-checkbox-input {
+appearance: none;
+width: 20px;
+height: 20px;
+border: 2px solid #d1d5db;
+border-radius: 4px;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+}
+.custom-checkbox-input:checked {
+border-color: #dc2626;
+background-color: #dc2626;
+}
+.custom-checkbox-input:checked::after {
+content: "";
+position: absolute;
+top: 2px;
+left: 6px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.video-modal {
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+}
+.video-modal.active {
+opacity: 1;
+pointer-events: auto;
+}
+.news-card {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.news-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}

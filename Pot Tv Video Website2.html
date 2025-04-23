@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The PotTv Media - Digital Storytelling</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#dc2626',secondary:'#10b981'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+.video-card:hover .play-button {
+opacity: 1;
+transform: translate(-50%, -50%) scale(1.1);
+}
+.play-button {
+opacity: 0.8;
+transition: all 0.3s ease;
+}
+.featured-project {
+transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.featured-project:hover {
+transform: translateY(-10px);
+box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.1), 0 10px 10px -5px rgba(220, 38, 38, 0.04);
+}
+.neon-border {
+box-shadow: 0 0 10px rgba(220, 38, 38, 0.5), 0 0 20px rgba(220, 38, 38, 0.3);
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 30px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .4s;
+border-radius: 30px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 22px;
+width: 22px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider {
+background-color: #d92828;
+}
+input:checked + .slider:before {
+transform: translateX(30px);
+}
+.custom-radio {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+.custom-radio-input {
+appearance: none;
+width: 20px;
+height: 20px;
+border: 2px solid #d1d5db;
+border-radius: 90%;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+}
+.custom-radio-input:checked {
+border-color: #dc2626;
+}
+.custom-radio-input:checked::after {
+content: "";
+position: absolute;
+top: 3.9px;
+left: 3.9px;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background-color: #dc2626;
+}
+.custom-checkbox {
+display: flex;
+align-items: center;
+cursor: pointer;
+}
+.custom-checkbox-input {
+appearance: none;
+width: 20px;
+height: 20px;
+border: 2px solid #d1d5db;
+border-radius: 4px;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+}
+.custom-checkbox-input:checked {
+border-color: #dc2626;
+background-color: #dc2626;
+}
+.custom-checkbox-input:checked::after {
+content: "";
+position: absolute;
+top: 2px;
+left: 6px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.video-modal {
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+}
+
+.video-modal.active {
+opacity: 1;
+pointer-events: auto;
+}
+.news-card {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.news-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+/* Prevent horizontal scroll on all screens */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Prevent container elements from overflowing */
+.container, .section, .px-4 {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make videos and images scale on small screens */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Make featured project cards responsive */
+@media (max-width: 768px) {
+  #featuredProjects > div {
+    min-width: 90vw !important; /* Avoid forcing horizontal scroll */
+  }
+  .custom-checkbox {
+    accent-color: red;
+  }
+  
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<!-- Header & Navigation -->
+<header class="fixed w-full bg-white bg-opacity-90 backdrop-blur-sm z-50 shadow-sm">
+<div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<a href="#" class="text-2xl font-['Pacifico'] text-primary">Pottvmedia</a>
+<nav class="hidden md:flex items-center space-x-8">
+<a href="#home" class="text-gray-700 hover:text-primary transition-colors duration-300">Home</a>
+<a href="#projects" class="text-gray-700 hover:text-primary transition-colors duration-300">Projects</a>
+<a href="#press" class="text-gray-700 hover:text-primary transition-colors duration-300">Press</a>
+<a href="#behind-scenes" class="text-gray-700 hover:text-primary transition-colors duration-300">Behind the Scenes</a>
+<a href="#contact" class="text-gray-700 hover:text-primary transition-colors duration-300">Contact</a>
+</nav>
+</nav>
+<div class="flex items-center space-x-4">
+<label class="custom-switch">
+<input type="checkbox" id="darkModeToggle">
+
+</label>
+
+<button class="md:hidden w-10 h-10 flex items-center justify-center" id="mobileMenuButton">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+<div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+<a href="#home" class="text-gray-700 hover:text-primary transition-colors duration-300 py-2">Home</a>
+<a href="#projects" class="text-gray-700 hover:text-primary transition-colors duration-300 py-2">Projects</a>
+<a href="#press" class="text-gray-700 hover:text-primary transition-colors duration-300 py-2">Press</a>
+<a href="#behind-scenes" class="text-gray-700 hover:text-primary transition-colors duration-300 py-2">Behind the Scenes</a>
+<a href="#contact" class="text-gray-700 hover:text-primary transition-colors duration-300 py-2">Contact</a>
+</div>
+</div>
+</header><section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- Video Background -->
+    <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover">
+        <source src="Thumbnail.MOV" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-r from-red-900/70 "></div>
+</div>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <!-- Content -->
+    <div class="container mx-auto px-4 z-10 flex flex-col items-center text-center">
+        <div class="max-w-3xl">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">The Future of Digital Storytelling</h1>
+            <p class="text-xl text-gray-200 mb-8">We craft immersive visual narratives that captivate audiences and elevate brands through cutting-edge videography.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#projects" class="bg-primary:bg-gray/10 border-2 hover:bg-primary text-white px-8 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">View our Work</a>
+                <a href="#contact" class="bg-transparent hover:bg-white/10 border-2 border-white text-white px-8 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">Get in Touch</a>
+            </div>
+        </div>
+    </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="w-10 h-20 flex items-center justify-center text-white">
+            <i class="ri-arrow-down-line ri-lg text-8xl"></i>
+        </div>
+    </div>
+</section>
+<!-- Featured Projects Carousel -->
+<section id="projects" class="py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4">Featured Projects</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Explore our most innovative and impactful visual storytelling work, showcasing our expertise in cinematic production.</p>
+</div>
+<div class="relative">
+<div class="flex overflow-x-auto pb-8 space-x-6 hide-scrollbar" id="featuredProjects">
+<!-- Projects will be loaded here -->
+</div>
+<button class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg z-10 hidden md:block" id="prevProject">
+<div class="w-6 h-6 flex items-center justify-center text-gray-700">
+<i class="ri-arrow-left-s-line"></i>
+</div>
+</button>
+<button class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg z-10 hidden md:block" id="nextProject">
+<div class="w-6 h-6 flex items-center justify-center text-gray-700">
+<i class="ri-arrow-right-s-line"></i>
+</div>
+</button>
+</div>
+</div>
+</section>
+<!-- Video Showcase Grid -->
+<section class="py-20 bg-red-400">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4 text-white">Video Showcase</h2>
+<p class="text-white max-w-3xl mx-auto">Browse our extensive collection of professional video productions across various industries and styles.</p>
+</div>
+<div class="mb-10 flex flex-wrap justify-center gap-4" id="videoFilters">
+<button class="px-6 py-2 !rounded-button bg-primary text-white font-medium whitespace-nowrap" data-filter="all">All</button>
+<button class="px-6 py-2 !rounded-button bg-white text-gray-700 hover:bg-gray-100 font-medium whitespace-nowrap" data-filter="commercial">Commercial</button>
+<button class="px-6 py-2 !rounded-button bg-white text-gray-700 hover:bg-gray-100 font-medium whitespace-nowrap" data-filter="documentary">Documentary</button>
+<button class="px-6 py-2 !rounded-button bg-white text-gray-700 hover:bg-gray-100 font-medium whitespace-nowrap" data-filter="music">Music Videos</button>
+<button class="px-6 py-2 !rounded-button bg-white text-gray-700 hover:bg-gray-100 font-medium whitespace-nowrap" data-filter="corporate">Corporate</button>
+<button class="px-6 py-2 !rounded-button bg-white text-gray-700 hover:bg-gray-100 font-medium whitespace-nowrap" data-filter="event">Event Coverage</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="videoGrid">
+<!-- Videos will be loaded here -->
+</div>
+<div class="mt-16 text-center">
+<button class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-8 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">Load More</button>
+</div>
+</div>
+</section>
+<!-- AI Recommendations -->
+<section class="py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4">Recommended For You</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Based on your interests, we think you'll love these productions.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="recommendedVideos">
+<!-- Recommended videos will be loaded here -->
+</div>
+</div>
+</section>
+<!-- Press & News Hub -->
+<section id="press" class="py-20 bg-red-400">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4 text-white">The Pottv Press Room</h2>
+<p class="text-white max-w-2xl mx-auto">Stay updated with our latest news, media coverage, and announcements from the world of digital storytelling.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="newsGrid">
+<!-- News will be loaded here -->
+</div><style>
+/* ...existing code... */
+a.bg-primary:hover {
+    background-color: #dc2626 !important; /* Keep it red on hover */
+}
+/* ...existing code... */
+</style>
+<div class="mt-16 text-center">
+<a href="#" class="bg-primary hover:bg-purple-700 text-white px-8 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">View All News</a>
+</div>
+</div>
+</section>
+<!-- Behind-the-Scenes Section -->
+<section id="behind-scenes" class="py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4">Behind The Scenes</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Discover the creative process, techniques, and stories that bring our productions to life.</p>
+</div>
+<div class="mb-10 flex flex-wrap justify-center border-b">
+<button class="px-8 py-4 text-primary border-b-2 border-primary font-medium" data-tab="footage">BTS Footage</button>
+<button class="px-8 py-4 text-gray-500 hover:text-gray-700 font-medium" data-tab="insights">Director Insights</button>
+<button class="px-8 py-4 text-gray-500 hover:text-gray-700 font-medium" data-tab="techniques">Production Techniques</button>
+</div>
+<div class="tab-content" id="footageContent">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="btsFootage">
+<!-- BTS footage will be loaded here -->
+</div>
+</div>
+<div class="tab-content hidden" id="insightsContent">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="directorInsights">
+<!-- Director insights will be loaded here -->
+</div>
+</div>
+<div class="tab-content hidden" id="techniquesContent">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="productionTechniques">
+<!-- Production techniques will be loaded here -->
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Form Section -->
+<section id="contact" class="py-20 bg-red-400">
+<div class="container mx-auto px-4">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold mb-4 text-white">Get In Touch</h2>
+<p class="text-white max-w-2xl mx-auto">Ready to bring your vision to life? Contact us to discuss your next project.</p>
+</div>
+<div class="bg-white rounded-lg shadow-xl overflow-hidden">
+<div class="p-8 md:p-12">
+ 
+  <form id="contactForm" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded" placeholder="Your name">
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+        <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded" placeholder="Your email">
+      </div>
+    </div>
+  
+    <div>
+      <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+      <input type="text" id="subject" name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded" placeholder="Subject">
+    </div>
+  
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <label class="custom-radio"><input type="radio" name="projectType" value="Commercial" required class="custom-radio-input"> Commercial</label>
+        <label class="custom-radio"><input type="radio" name="projectType" value="Corporate" class="custom-radio-input"> Corporate</label>
+        <label class="custom-radio"><input type="radio" name="projectType" value="Event Coverage" class="custom-radio-input"> Event Coverage</label>
+      </div>
+    </div>
+  
+    <div>
+      <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+      <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded" placeholder="Tell us about your project"></textarea>
+    </div>
+  
+    <div>
+      <label class="custom-checkbox">
+        <input type="checkbox" name="subscribe" value="yes" class="custom-checkbox-input">
+        Subscribe to our newsletter for updates and insights
+      </label>
+    </div>
+  
+    <!-- Hidden inputs -->
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
+  
+    <div>
+      <button type="submit" class="w-full bg-red-600 text-white px-8 py-3 rounded">Send Message</button>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white pt-16 pb-8">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+<div>
+<h3 class="text-xl font-['Pacifico'] text-white mb-6">Pottvmedia</h3>
+<p class="text-gray-400 mb-6">Redefining digital storytelling through innovative videography and cinematic excellence.</p>
+<div class="flex space-x-4">
+<a href="https://www.instagram.com/thepottv?igsh=emlqZ2toMmczYzhp" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300">
+<i class="ri-instagram-line"></i>
+</a>
+<a href="https://x.com/thepottv?s=21&t=QpCECVHAhVcXkoAaTJNbcw" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300">
+<i class="ri-youtube-line"></i>
+</a>
+<a href="https://www.facebook.com/share/1EUgs34An1/?mibextid=LQQJ4d" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300">
+<i class="ri-facebook-line"></i>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-6">Contact</h3>
+<ul class="space-y-3">
+  <div>
+    <h3 class="font-bold">Location</h3>
+    <p class="text-white-600">3 Ayoola Drive, New Bodija, Ibadan 200221, Oyo</p>
+    </div>
+    <div>
+      <h3 class="font-bold">Phone</h3>
+      <p class="text-white-600">+1 (555) 123-4567</p>
+      </div>
+      <div>
+        <h3 class="font-bold">Email</h3>
+        <p class="text-white-600">thepottvmedia@gmail.com</p>
+        </div>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-6">Services</h3>
+<ul class="space-y-3">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Commercial Production</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Documentary Filmmaking</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Music Videos</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Corporate Videos</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Event Coverage</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-6">Newsletter</h3>
+<p class="text-gray-400 mb-4">Subscribe to receive updates on our latest projects and industry insights.</p>
+<form class="space-y-4">
+<div class="relative">
+<input type="email" placeholder="Your email address" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition">
+</div>
+<button type="submit" class="w-full bg-primary hover:bg-purple-700 text-white px-4 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 The PotTv Media. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
+<a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
+<a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-300">Cookie Policy</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<!-- Video Modal -->
+<div id="videoModal" class="video-modal fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+<div class="relative w-full max-w-4xl mx-4">
+<button id="closeVideoModal" class="absolute -top-12 right-0 text-white">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-close-line ri-2x"></i>
+</div>
+</button>
+<div class="aspect-video bg-black">
+<iframe id="videoIframe" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
+</div>
+<!-- News Modal -->
+<div id="newsModal" class="video-modal fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+<div class="relative w-full max-w-3xl mx-4 bg-white rounded-lg overflow-hidden">
+<button id="closeNewsModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-close-line ri-lg"></i>
+</div>
+</button>
+<div class="p-8">
+<h3 id="newsTitle" class="text-2xl font-bold mb-4"></h3>
+<div class="flex items-center text-gray-500 mb-6">
+<span id="newsDate"></span>
+<span class="mx-2">•</span>
+<span id="newsCategory"></span>
+</div>
+<div id="newsContent" class="prose max-w-none"></div>
+</div>
+</div>
+</div>
+<!-- Thank You Modal -->
+<div id="thankYouModal" class="video-modal fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+<div class="relative w-full max-w-md mx-4 bg-white rounded-lg overflow-hidden">
+<button id="closeThankYouModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+<div class="w-8 h-8 flex items-center justify-center">
+<i class="ri-close-line ri-lg"></i>
+</div>
+</button>
+<div class="p-8 text-center">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+<div class="w-10 h-10 flex items-center justify-center text-green-500">
+<i class="ri-check-line ri-2x"></i>
+</div>
+</div>
+<h3 class="text-2xl font-bold mb-4">Thank You!</h3>
+<p class="text-gray-600 mb-6">Your message has been sent successfully. We'll get back to you as soon as possible.</p>
+<div class="mb-6">
+<p class="text-gray-700 font-medium mb-3">Connect with us on social media:</p>
+<div class="flex justify-center space-x-4">
+<a href="https://www.instagram.com/thepottv?igsh=emlqZ2toMmczYzhp" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-300">
+<i class="ri-instagram-line"></i>
+</a>
+<a href="https://x.com/thepottv?s=21&t=QpCECVHAhVcXkoAaTJNbcw" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-300">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-300">
+<i class="ri-youtube-line"></i>
+</a>
+<a href="https://www.facebook.com/share/1EUgs34An1/?mibextid=LQQJ4d" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-300">
+<i class="ri-facebook-line"></i>
+</a>
+</div>
+</div>
+<button id="returnHome" class="bg-primary hover:bg-red-700 text-white px-8 py-3 !rounded-button font-medium transition-all duration-300 whitespace-nowrap">Return to Home</button>
+</div>
+</div>
+</div>
+  </div>
+<script>
+// Mock Data
+const featuredProjects = [
+{
+id: 1,
+title: "How to Romanticize Your Environment",
+category: "Vlog",
+thumbnail: "(995) 96 Hours In Grand Popo _ Final Trailer _ Travel Vlog - YouTube - Google Chrome 3_21_2025 11_19_25 AM.png",
+videoUrl: "https://youtu.be/zbALJiVcg58?si=XTttjLmVWg3LSLkC",
+description: "When you romanticise your environment, you also romanticize your life. I'm back with a new video, my first documentary - I hope you enjoy it. ."
+},
+{
+id: 2,
+title: "Family Is Everything",
+category: "Documentary",
+thumbnail: "(995) victor ehindero - YouTube - Google Chrome 3_21_2025 5_36_06 PM.png",
+videoUrl: "https://youtu.be/exUK3lWxTEs?si=e0uraINgjTtdYauN",
+description: "I spent my week with my family celebrating the 30th Remembrance Thanksgiving of my Grandparents. Family really is everything ;)"
+},
+{
+id: 3,
+title: "96 Hours In Grand Popo",
+category: "Documentary",
+thumbnail: "(995) victor ehindero - YouTube - Google Chrome 3_21_2025 11_55_18 PM.png",
+videoUrl: "https://youtu.be/BDNDqEhnbBw?si=A6oDddrxaktE9HP8",
+description: "The mission’s orders are out. Final Trailer for 96 Hours In Grand Popo. A Victor Ehindero Film. With Love, November 30th 🎬❤️"
+},
+{
+id: 4,
+title: "Future Forward",
+category: "Corporate",
+thumbnail: "https://public.readdy.ai/ai/img_res/e76e888df5f02b80213a886319116ca0.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+description: "A visionary corporate film for a leading tech company, highlighting innovation and future technologies."
+},
+{
+id: 5,
+title: "Festival Moments",
+category: "Event Coverage",
+thumbnail: "https://public.readdy.ai/ai/img_res/b0ceaf75c25e61004abf81e47094766e.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+description: "Comprehensive coverage of an international arts festival, capturing the energy and creativity of live performances."
+}
+];
+const videos = [
+{
+id: 1,
+title: "Quantum Leap",
+category: "commercial",
+thumbnail: "https://public.readdy.ai/ai/img_res/ab37a7eecb52ecdda16f7ba12e20602c.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "2:15"
+},
+{
+id: 2,
+title: "Harmonic Visions",
+category: "music",
+thumbnail: "https://public.readdy.ai/ai/img_res/1ffeaea7df2b8b6e60fe8390985e8da9.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "4:32"
+},
+{
+id: 3,
+title: "Ocean Depths",
+category: "documentary",
+thumbnail: "https://public.readdy.ai/ai/img_res/5d2ac52274ab04f8d6071e44d80c4233.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "18:45"
+},
+{
+id: 4,
+title: "Vision 2030",
+category: "corporate",
+thumbnail: "https://public.readdy.ai/ai/img_res/3f87eaec7fd73f7b05664811ecdaf978.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "5:20"
+},
+{
+id: 5,
+title: "Summit Highlights",
+category: "event",
+thumbnail: "https://public.readdy.ai/ai/img_res/2148d19262aa81ead8171fb06093e72f.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "12:08"
+},
+{
+id: 6,
+title: "Culinary Journey",
+category: "commercial",
+thumbnail: "https://public.readdy.ai/ai/img_res/092d882892ad3b862e7fd1c010839ff8.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+duration: "1:45"
+}
+];
+const recommendedVideos = [
+{
+id: 1,
+title: "Neon Dreams",
+category: "Commercial",
+thumbnail: "https://public.readdy.ai/ai/img_res/a27d853a2ff78210e7339d18068b07a3.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+},
+{
+id: 2,
+title: "Rhythm & Soul",
+category: "Music Video",
+thumbnail: "https://public.readdy.ai/ai/img_res/88bf50ad9e2a22b32ee7a3e8c90de91f.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+},
+{
+id: 3,
+title: "Mountain Majesty",
+category: "Documentary",
+thumbnail: "https://public.readdy.ai/ai/img_res/0cc6c5c92ba516d33283624ad46991fd.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+},
+{
+id: 4,
+title: "Innovation Hub",
+category: "Corporate",
+thumbnail: "https://public.readdy.ai/ai/img_res/f3d160e15b54318df8f47a9aff8df2a0.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+}
+];
+const newsItems = [
+{
+id: 1,
+title: "PotTv Media Wins International Cinematography Award",
+date: "March 25, 2025",
+category: "Awards",
+excerpt: "Our team's groundbreaking work on 'Ethereal Dreams' has been recognized with the prestigious Golden Lens Award for innovative commercial cinematography.",
+thumbnail: "https://public.readdy.ai/ai/img_res/4b74ffda2b2c47e10ed384f4ad2732cd.jpg",
+content: "<p>We are thrilled to announce that PotTv Media has been awarded the prestigious Golden Lens Award for our work on the 'Ethereal Dreams' commercial campaign. This international recognition celebrates our team's commitment to pushing the boundaries of visual storytelling and cinematography.</p><p>The judges particularly praised our innovative use of lighting techniques, seamless integration of practical and digital effects, and the emotional resonance of the narrative. This award represents a significant milestone in our journey to redefine the standards of commercial videography.</p><p>Director Victor Ehindero commented: 'This award belongs to our entire team who poured their creativity and technical expertise into making this project a reality. We're honored to be recognized by our peers in the industry and excited to continue exploring new frontiers in visual storytelling.'</p><p>The Golden Lens Award is one of the most respected accolades in the field of cinematography, with entries from over 60 countries competing for recognition across multiple categories.</p>"
+},
+{
+id: 2,
+title: "New Partnership Announced with Global Tech Giant",
+date: "March 18, 2025",
+category: "Business",
+excerpt: "PotTv Media has entered into a strategic partnership with InnovateTech to develop next-generation visual content for their upcoming product launches.",
+thumbnail: "https://public.readdy.ai/ai/img_res/2ec4325a3346eaefb3c58938ef91c2da.jpg",
+content: "<p>PotTv Media is excited to announce a groundbreaking partnership with global technology leader InnovateTech. This collaboration will see our team developing cutting-edge visual content for InnovateTech's highly anticipated product launches throughout 2025 and 2026.</p><p>The partnership represents a fusion of InnovateTech's revolutionary products with PotTv Media's innovative visual storytelling approach. Our team will be responsible for creating immersive content that showcases the technological advancements and user experiences that define InnovateTech's product ecosystem.</p><p>'This partnership allows us to combine our creative vision with truly revolutionary technology,' said Victor Ehindero, Creative Director at PotTv Media. 'We're looking forward to developing visual narratives that not only showcase these products but create emotional connections with audiences worldwide.'</p><p>The first collaborative project is scheduled to launch in June 2025, with additional campaigns planned throughout the year. This partnership marks a significant expansion of PotTv Media's corporate portfolio and reinforces our position as a leader in technology-focused visual content.</p>"
+},
+{
+id: 3,
+title: "PotTv Media Expands with New Studio Opening",
+date: "March 10, 2025",
+category: "Company News",
+excerpt: "We're thrilled to announce the opening of our new state-of-the-art production facility, expanding our capabilities for high-end video production.",
+thumbnail: "https://public.readdy.ai/ai/img_res/7301c790e2c2cb88c2a763f8b8f405de.jpg",
+content: "<p>PotTv Media is proud to announce the grand opening of our new state-of-the-art production facility in the heart of the city's creative district. This expansion represents a significant investment in our future and dramatically enhances our production capabilities.</p><p>The new 15,000 square foot facility features multiple sound stages, a dedicated green screen studio, advanced post-production suites, and a cutting-edge motion capture system. These additions allow us to take on more ambitious projects while maintaining complete creative control throughout the production process.</p><p>'This new studio represents the next chapter in our company's evolution,' said Victor Ehindero, CEO of PotTv Media. 'We've created a space where technology and creativity can flourish together, enabling our team to push the boundaries of what's possible in visual storytelling.'</p><p>The facility also includes collaborative spaces designed to foster innovation and client engagement, reinforcing our commitment to close creative partnerships. An open house event for industry partners and clients is scheduled for April 15, 2025.</p>"
+}
+];
+const btsFootage = [
+{
+id: 1,
+title: "Creating the Perfect Shot",
+project: "Ethereal Dreams",
+thumbnail: "https://public.readdy.ai/ai/img_res/e7e409f1844cc6cd0ed0bf46a6b00e93.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+},
+{
+id: 2,
+title: "Drone Choreography",
+project: "Urban Rhythms",
+thumbnail: "https://public.readdy.ai/ai/img_res/0a66f3f596e5347ef7230e2716c9604d.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+},
+{
+id: 3,
+title: "Underwater Filming Challenges",
+project: "Ocean Depths",
+thumbnail: "https://public.readdy.ai/ai/img_res/c5da1d6b099a4da2a8adb9c6afd4d0d9.jpg",
+videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+}
+];
+const directorInsights = [
+{
+id: 1,
+name: "Victor Ehindero",
+role: "Creative Director",
+project: "Romanticizing Your Environment",
+insight: "For 'Romanticizing Your Environment,' we wanted to create a sense of weightlessness and timelessness. We experimented with various lighting techniques to achieve that ethereal quality, ultimately using a combination of practical lighting and post-production effects to create the dreamlike atmosphere that defines the piece.",
+avatar: "data:image/jpeg;base64,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"
+},
+{
+id: 2,
+name: "Victor Ehindero",
+role: "Technical Director",
+project: "96 Hours In Grand Popo",
+insight: "The biggest challenge with '96 Hours In Grand Popo' was synchronizing the camera movements with both the music and the urban environment. We developed a custom rig that allowed us to achieve fluid transitions between different perspectives while maintaining perfect timing with the beat. This technical innovation became the foundation of the video's distinctive visual style.",
+avatar: "data:image/jpeg;base64,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"
+}
+];
+const productionTechniques = [
+{
+id: 1,
+title: "Advanced Drone Cinematography",
+description: "Our custom-modified drone systems allow for unprecedented stability and precision in aerial cinematography, enabling smooth tracking shots and complex flight patterns even in challenging conditions.",
+icon: "ri-drone-line"
+},
+{
+id: 2,
+title: "Dynamic Color Grading",
+description: "We've developed proprietary color grading techniques that enhance emotional impact while maintaining a natural aesthetic, creating distinctive visual signatures for each project.",
+icon: "ri-palette-line"
+},
+{
+id: 3,
+title: "Immersive Sound Design",
+description: "Our approach to sound design focuses on creating three-dimensional audio landscapes that complement and enhance the visual storytelling, drawing viewers deeper into the experience.",
+icon: "ri-volume-up-line"
+}
+];
+// Render Functions
+function renderFeaturedProjects() {
+const container = document.getElementById('featuredProjects');
+featuredProjects.forEach(project => {
+const projectCard = document.createElement('div');
+projectCard.className = 'featured-project flex-shrink-0 w-full md:w-[500px] bg-white rounded-lg shadow-lg overflow-hidden';
+projectCard.innerHTML = `
+<div class="relative">
+<img src="${project.thumbnail}" alt="${project.title}" class="w-full h-64 object-cover object-top">
+<button class="play-button absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300" data-video="${project.videoUrl}">
+<div class="w-6 h-6 flex items-center justify-center text-white">
+<i class="ri-play-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-3">
+<h3 class="text-xl font-bold">${project.title}</h3>
+<span class="text-sm font-medium text-primary px-3 py-1 bg-red-50 rounded-full">${project.category}</span>
+</div>
+<p class="text-gray-600 mb-4">${project.description}</p>
+<button class="text-primary font-medium hover:text-purple-700 transition-colors duration-300 flex items-center" data-video="${project.videoUrl}">
+Watch Project
+<div class="w-5 h-5 flex items-center justify-center ml-1">
+<i class="ri-arrow-right-line"></i>
+</div>
+</button>
+</div>
+`;
+container.appendChild(projectCard);
+});
+}
+function renderVideos() {
+const container = document.getElementById('videoGrid');
+videos.forEach(video => {
+const videoCard = document.createElement('div');
+videoCard.className = `video-card relative rounded-lg overflow-hidden shadow-lg group ${video.category}`;
+videoCard.innerHTML = `
+<div class="relative">
+<img src="${video.thumbnail}" alt="${video.title}" class="w-full h-48 object-cover object-top">
+<div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<button class="play-button absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300" data-video="${video.videoUrl}">
+<div class="w-6 h-6 flex items-center justify-center text-white">
+<i class="ri-play-fill"></i>
+</div>
+</button>
+<span class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">${video.duration}</span>
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold mb-1">${video.title}</h3>
+<p class="text-gray-500 text-sm capitalize">${video.category}</p>
+</div>
+`;
+container.appendChild(videoCard);
+});
+}
+function renderRecommendedVideos() {
+const container = document.getElementById('recommendedVideos');
+recommendedVideos.forEach(video => {
+const videoCard = document.createElement('div');
+videoCard.className = 'video-card relative rounded-lg overflow-hidden shadow-lg group';
+videoCard.innerHTML = `
+<div class="relative">
+<img src="${video.thumbnail}" alt="${video.title}" class="w-full h-40 object-cover object-top">
+<div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<button class="play-button absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300" data-video="${video.videoUrl}">
+<div class="w-5 h-5 flex items-center justify-center text-white">
+<i class="ri-play-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold mb-1">${video.title}</h3>
+<p class="text-gray-500 text-sm">${video.category}</p>
+</div>
+`;
+container.appendChild(videoCard);
+});
+}
+function renderNewsItems() {
+const container = document.getElementById('newsGrid');
+newsItems.forEach(item => {
+const newsCard = document.createElement('div');
+newsCard.className = 'news-card bg-white rounded-lg shadow-lg overflow-hidden';
+newsCard.innerHTML = `
+<img src="${item.thumbnail}" alt="${item.title}" class="w-full h-48 object-cover object-top">
+<div class="p-6">
+<div class="flex items-center text-gray-500 text-sm mb-3">
+<span>${item.date}</span>
+<span class="mx-2">•</span>
+<span>${item.category}</span>
+</div>
+<h3 class="text-xl font-bold mb-3">${item.title}</h3>
+<p class="text-gray-600 mb-4">${item.excerpt}</p>
+<button class="read-more-btn text-primary font-medium hover:text-purple-700 transition-colors duration-300 flex items-center" data-news-id="${item.id}">
+Read More
+<div class="w-5 h-5 flex items-center justify-center ml-1">
+<i class="ri-arrow-right-line"></i>
+</div>
+</button>
+</div>
+`;
+container.appendChild(newsCard);
+});
+}
+function renderBTSFootage() {
+const container = document.getElementById('btsFootage');
+btsFootage.forEach(item => {
+const footageCard = document.createElement('div');
+footageCard.className = 'relative rounded-lg overflow-hidden shadow-lg group';
+footageCard.innerHTML = `
+<div class="relative">
+<img src="${item.thumbnail}" alt="${item.title}" class="w-full h-48 object-cover object-top">
+<div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<button class="play-button absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300" data-video="${item.videoUrl}">
+<div class="w-6 h-6 flex items-center justify-center text-white">
+<i class="ri-play-fill"></i>
+</div>
+</button>
+</div>
+<div class="p-4">
+<h3 class="text-lg font-bold mb-1">${item.title}</h3>
+<p class="text-gray-500 text-sm">From: ${item.project}</p>
+</div>
+`;
+container.appendChild(footageCard);
+});
+}
+function renderDirectorInsights() {
+const container = document.getElementById('directorInsights');
+directorInsights.forEach(item => {
+const insightCard = document.createElement('div');
+insightCard.className = 'flex gap-6 bg-white p-6 rounded-lg shadow-lg';
+insightCard.innerHTML = `
+<img src="${item.avatar}" alt="${item.name}" class="w-20 h-20 rounded-full object-cover flex-shrink-0">
+<div>
+<h3 class="text-xl font-bold mb-1">${item.name}</h3>
+<p class="text-primary font-medium mb-2">${item.role}</p>
+<p class="text-gray-500 text-sm mb-3">Project: ${item.project}</p>
+<p class="text-gray-600">"${item.insight}"</p>
+</div>
+`;
+container.appendChild(insightCard);
+});
+}
+function renderProductionTechniques() {
+const container = document.getElementById('productionTechniques');
+productionTechniques.forEach(item => {
+const techniqueCard = document.createElement('div');
+techniqueCard.className = 'bg-white p-6 rounded-lg shadow-lg text-center';
+techniqueCard.innerHTML = `
+<div class="w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-red-100 rounded-full text-primary">
+<i class="${item.icon} ri-2x"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">${item.title}</h3>
+<p class="text-gray-600">${item.description}</p>
+`;
+container.appendChild(techniqueCard);
+});
+}
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+// Render all content
+renderFeaturedProjects();
+renderVideos();
+renderRecommendedVideos();
+renderNewsItems();
+renderBTSFootage();
+renderDirectorInsights();
+renderProductionTechniques();
+// Mobile Menu Toggle
+const mobileMenuButton = document.getElementById('mobileMenuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+mobileMenuButton.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+});
+// Video Modal
+const videoModal = document.getElementById('videoModal');
+const videoIframe = document.getElementById('videoIframe');
+const closeVideoModal = document.getElementById('closeVideoModal');
+document.addEventListener('click', function(e) {
+if (e.target.closest('.play-button') || e.target.closest('[data-video]')) {
+const videoUrl = e.target.closest('[data-video]').getAttribute('data-video');
+videoIframe.src = videoUrl;
+videoModal.classList.add('active');
+document.body.style.overflow = 'hidden';
+}
+});
+closeVideoModal.addEventListener('click', function() {
+videoModal.classList.remove('active');
+videoIframe.src = '';
+document.body.style.overflow = '';
+});
+// News Modal
+const newsModal = document.getElementById('newsModal');
+const newsTitle = document.getElementById('newsTitle');
+const newsDate = document.getElementById('newsDate');
+const newsCategory = document.getElementById('newsCategory');
+const newsContent = document.getElementById('newsContent');
+const closeNewsModal = document.getElementById('closeNewsModal');
+document.addEventListener('click', function(e) {
+if (e.target.closest('.read-more-btn')) {
+const newsId = parseInt(e.target.closest('.read-more-btn').getAttribute('data-news-id'));
+const newsItem = newsItems.find(item => item.id === newsId);
+newsTitle.textContent = newsItem.title;
+newsDate.textContent = newsItem.date;
+newsCategory.textContent = newsItem.category;
+newsContent.innerHTML = newsItem.content;
+newsModal.classList.add('active');
+document.body.style.overflow = 'hidden';
+}
+});
+closeNewsModal.addEventListener('click', function() {
+newsModal.classList.remove('active');
+document.body.style.overflow = '';
+});
+// Thank You Modal
+const contactForm = document.getElementById('contactForm');
+const thankYouModal = document.getElementById('thankYouModal');
+const closeThankYouModal = document.getElementById('closeThankYouModal');
+const returnHome = document.getElementById('returnHome');
+contactForm.addEventListener('submit', function(e) {
+
+thankYouModal.classList.add('active');
+document.body.style.overflow = 'hidden';
+contactForm.reset();
+});
+closeThankYouModal.addEventListener('click', function() {
+thankYouModal.classList.remove('active');
+document.body.style.overflow = '';
+});
+returnHome.addEventListener('click', function() {
+thankYouModal.classList.remove('active');
+document.body.style.overflow = '';
+window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+// Video Filters
+const filterButtons = document.querySelectorAll('#videoFilters button');
+filterButtons.forEach(button => {
+button.addEventListener('click', function() {
+const filter = this.getAttribute('data-filter');
+// Update active button
+filterButtons.forEach(btn => {
+btn.classList.remove('bg-primary', 'text-white');
+btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-100');
+});
+this.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-100');
+this.classList.add('bg-primary', 'text-white');
+// Filter videos
+const videoCards = document.querySelectorAll('#videoGrid .video-card');
+videoCards.forEach(card => {
+if (filter === 'all' || card.classList.contains(filter)) {
+card.style.display = 'block';
+} else {
+card.style.display = 'none';
+}
+});
+});
+});
+// Behind-the-Scenes Tabs
+const tabButtons = document.querySelectorAll('[data-tab]');
+const tabContents = document.querySelectorAll('.tab-content');
+tabButtons.forEach(button => {
+button.addEventListener('click', function() {
+const tab = this.getAttribute('data-tab');
+// Update active button
+tabButtons.forEach(btn => {
+btn.classList.remove('text-primary', 'border-primary');
+btn.classList.add('text-gray-500', 'hover:text-gray-700');
+});
+this.classList.remove('text-gray-500', 'hover:text-gray-700');
+this.classList.add('text-primary', 'border-primary');
+// Show active content
+tabContents.forEach(content => {
+content.classList.add('hidden');
+});
+document.getElementById(`${tab}Content`).classList.remove('hidden');
+});
+});
+// Carousel Navigation
+const prevProject = document.getElementById('prevProject');
+const nextProject = document.getElementById('nextProject');
+const featuredProjectsContainer = document.getElementById('featuredProjects');
+prevProject.addEventListener('click', function() {
+featuredProjectsContainer.scrollBy({ left: -520, behavior: 'smooth' });
+});
+nextProject.addEventListener('click', function() {
+featuredProjectsContainer.scrollBy({ left: 520, behavior: 'smooth' });
+});
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('change', function() {
+if (this.checked) {
+document.documentElement.classList.add('dark');
+} else {
+document.documentElement.classList.remove('dark');
+}
+});
+// Smooth Scrolling for Anchor Links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function(e) {
+const targetId = this.getAttribute('href');
+if (targetId === '#') return;
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+window.scrollTo({
+top: targetElement.offsetTop - 80,
+behavior: 'smooth'
+});
+// Close mobile menu if open
+if (!mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.add('hidden');
+}
+}
+});
+});
+});
+</script>
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+  
+    const form = e.target;
+    const formData = new FormData(form);
+  
+    fetch("https://formsubmit.co/ehinderohenry7@gmail.com", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById("thankYouModal").classList.remove("hidden");
+        form.reset();
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    })
+    .catch(error => {
+  console.error("Error:", error);
+  // alert("Error sending message.");
+});
+  });
+  </script>
+</body>
+</html>
